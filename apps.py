@@ -93,21 +93,19 @@ def show_dashboard():
 has_map = False
 for move, hist in st.session_state.map_history.items():
     if isinstance(hist, list) and hist:
-        valid_entries = [entry for entry in hist if isinstance(entry, dict)]
-        if valid_entries:
-            has_map = True
-            st.markdown("### Latest Movement Map Sessions")
-            last = valid_entries[-1]
-            left = last.get("Left", {})
-            right = last.get("Right", {})
-            left_comp = left.get("Composite", "-")
-            right_comp = right.get("Composite", "-")
-            symmetry = last.get("Symmetry", "-")
+        for entry in reversed(hist):
+            if isinstance(entry, dict) and isinstance(entry.get("Left"), dict) and isinstance(entry.get("Right"), dict):
+                has_map = True
+                st.markdown("### Latest Movement Map Sessions")
+                left_comp = entry["Left"].get("Composite", "-")
+                right_comp = entry["Right"].get("Composite", "-")
+                symmetry = entry.get("Symmetry", "-")
+                c1, c2, c3 = st.columns(3)
+                c1.metric(f"{move} L-Comp", left_comp)
+                c2.metric(f"{move} R-Comp", right_comp)
+                c3.metric(f"{move} Symmetry", symmetry)
+                break
 
-            c1, c2, c3 = st.columns(3)
-            c1.metric(f"{move} L-Comp", left_comp)
-            c2.metric(f"{move} R-Comp", right_comp)
-            c3.metric(f"{move} Symmetry", symmetry)
 
 if not has_map:
     st.info("No Movement Map data recorded yet.")
