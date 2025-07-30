@@ -89,26 +89,36 @@ def show_dashboard():
     else:
         st.info("No ROM Wizard data recorded yet.")
 
-   # Movement Map summaries
-has_map = False
+st.markdown("### Latest Movement Map Sessions")
 for move, hist in st.session_state.map_history.items():
-    if isinstance(hist, list) and hist:
-        for entry in reversed(hist):
-            if isinstance(entry, dict) and isinstance(entry.get("Left"), dict) and isinstance(entry.get("Right"), dict):
-                has_map = True
-                st.markdown("### Latest Movement Map Sessions")
-                left_comp = entry["Left"].get("Composite", "-")
-                right_comp = entry["Right"].get("Composite", "-")
-                symmetry = entry.get("Symmetry", "-")
-                c1, c2, c3 = st.columns(3)
-                c1.metric(f"{move} L-Comp", left_comp)
-                c2.metric(f"{move} R-Comp", right_comp)
-                c3.metric(f"{move} Symmetry", symmetry)
-                break
+    if not isinstance(hist, list) or not hist:
+        continue
 
+    last_valid_entry = None
+    for entry in reversed(hist):
+        if (
+            isinstance(entry, dict)
+            and isinstance(entry.get("Left"), dict)
+            and isinstance(entry.get("Right"), dict)
+        ):
+            last_valid_entry = entry
+            break
 
-if not has_map:
-    st.info("No Movement Map data recorded yet.")
+    if last_valid_entry:
+        left = last_valid_entry["Left"]
+        right = last_valid_entry["Right"]
+
+        left_comp = left.get("Composite", "-") if isinstance(left, dict) else "-"
+        right_comp = right.get("Composite", "-") if isinstance(right, dict) else "-"
+        symmetry = last_valid_entry.get("Symmetry", "-")
+
+        c1, c2, c3 = st.columns(3)
+        c1.metric(f"{move} L-Comp", left_comp)
+        c2.metric(f"{move} R-Comp", right_comp)
+        c3.metric(f"{move} Symmetry", symmetry)
+    else:
+        st.info(f"No valid data for {move}.")
+
 
 
     st.markdown("---")
