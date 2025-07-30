@@ -96,12 +96,16 @@ def show_dashboard():
         for move, hist in st.session_state.map_history.items():
     if hist:
         last = hist[-1]
+
+        # ✅ Check if last is a dict before proceeding
+        if isinstance(last, dict):
+            left_comp = last.get("Left", {}).get("Composite", "-")
+            right_comp = last.get("Right", {}).get("Composite", "-")
+            symmetry = last.get("Symmetry", "-")
+        else:
+            left_comp = right_comp = symmetry = "-"
+
         c1, c2, c3 = st.columns(3)
-
-        left_comp = last.get("Left", {}).get("Composite", "-")
-        right_comp = last.get("Right", {}).get("Composite", "-")
-        symmetry = last.get("Symmetry", "-")
-
         c1.metric(f"{move} L-Comp", left_comp)
         c2.metric(f"{move} R-Comp", right_comp)
         c3.metric(f"{move} Symmetry", symmetry)
