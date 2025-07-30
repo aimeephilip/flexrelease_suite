@@ -97,15 +97,15 @@ def show_dashboard():
     if hist:
         last = hist[-1]
         c1, c2, c3 = st.columns(3)
-        if "Left" in last and "Composite" in last["Left"]:
-            c1.metric(f"{move} L-Comp", last["Left"]["Composite"])
-        else:
-            c1.metric(f"{move} L-Comp", "-")
-        if "Right" in last and "Composite" in last["Right"]:
-            c2.metric(f"{move} R-Comp", last["Right"]["Composite"])
-        else:
-            c2.metric(f"{move} R-Comp", "-")
-        c3.metric(f"{move} Symmetry", last.get("Symmetry", "-"))
+
+        left_comp = last.get("Left", {}).get("Composite", "-")
+        right_comp = last.get("Right", {}).get("Composite", "-")
+        symmetry = last.get("Symmetry", "-")
+
+        c1.metric(f"{move} L-Comp", left_comp)
+        c2.metric(f"{move} R-Comp", right_comp)
+        c3.metric(f"{move} Symmetry", symmetry)
+
 
     else:
         st.info("No Movement Map data recorded yet.")
