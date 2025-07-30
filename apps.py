@@ -94,12 +94,19 @@ def show_dashboard():
     if has_map:
         st.markdown("### Latest Movement Map Sessions")
         for move, hist in st.session_state.map_history.items():
-            if hist:
-                last = hist[-1]
-                c1, c2, c3 = st.columns(3)
-                c1.metric(f"{move} L-Comp", last["Left"]["Composite"])
-                c2.metric(f"{move} R-Comp", last["Right"]["Composite"])
-                c3.metric(f"{move} Symmetry", last.get("Symmetry", "-"))
+    if hist:
+        last = hist[-1]
+        c1, c2, c3 = st.columns(3)
+        if "Left" in last and "Composite" in last["Left"]:
+            c1.metric(f"{move} L-Comp", last["Left"]["Composite"])
+        else:
+            c1.metric(f"{move} L-Comp", "-")
+        if "Right" in last and "Composite" in last["Right"]:
+            c2.metric(f"{move} R-Comp", last["Right"]["Composite"])
+        else:
+            c2.metric(f"{move} R-Comp", "-")
+        c3.metric(f"{move} Symmetry", last.get("Symmetry", "-"))
+
     else:
         st.info("No Movement Map data recorded yet.")
 
