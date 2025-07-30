@@ -7,6 +7,9 @@ import pandas as pd
 from math import atan2, degrees
 from datetime import datetime
 
+if "page" not in st.session_state:
+    st.session_state.page = None
+
 # --- Shared Movement Map Instructions ---
 instructions = {
     "Overhead Reach": """**Overhead Reach (L/R):**  
