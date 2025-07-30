@@ -7,6 +7,14 @@ import pandas as pd
 from math import atan2, degrees
 from datetime import datetime
 
+# --- Streamlit Page Config ---
+st.set_page_config(
+    page_title="FlexRelease Suite Dashboard",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# --- Page State ---
 if "page" not in st.session_state:
     st.session_state.page = None
 
@@ -35,12 +43,12 @@ instructions = {
     3. Repeat other side."""
 }
 
-# --- Streamlit Config ---
-st.set_page_config(
-    page_title="FlexRelease Suite Dashboard",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
+# ✅ --- FIX: Initialise histories before they’re used ---
+if "map_history" not in st.session_state:
+    st.session_state.map_history = {m: [] for m in instructions}
+if "results" not in st.session_state:
+    st.session_state.results = []
+
 
 # --- Authentication ---
 if "client_id" not in st.session_state:
