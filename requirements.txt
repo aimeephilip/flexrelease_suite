@@ -1,5 +1,5 @@
-streamlit
-opencv-python
-numpy
-pandas
-mediapipe
+streamlit==1.26.0
+opencv-python==4.7.0.72
+numpy==1.23.5
+pandas==1.5.3
+mediapipe==0.10.14
