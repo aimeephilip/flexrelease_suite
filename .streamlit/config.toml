@@ -4,3 +4,7 @@ backgroundColor = "#FFFFFF"          # Main background (white)
 secondaryBackgroundColor = "#F7F7F7" # Sidebars, widgets (light grey)
 textColor = "#000000"                # Text colour (black)
 font = "sans serif"
+
+[server]
+maxUploadSize = 200
+fileWatcherType = "none"
