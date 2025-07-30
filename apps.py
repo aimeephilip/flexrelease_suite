@@ -89,30 +89,29 @@ def show_dashboard():
     else:
         st.info("No ROM Wizard data recorded yet.")
 
-    # Movement Map summaries
-    has_map = any(st.session_state.map_history[m] for m in instructions)
-    if has_map:
-        st.markdown("### Latest Movement Map Sessions")
-        for move, hist in st.session_state.map_history.items():
-    if hist:
-        last = hist[-1]
-
-        # ✅ Check if last is a dict before proceeding
-        if isinstance(last, dict):
-            left_comp = last.get("Left", {}).get("Composite", "-")
-            right_comp = last.get("Right", {}).get("Composite", "-")
+   # Movement Map summaries
+has_map = False
+for move, hist in st.session_state.map_history.items():
+    if isinstance(hist, list) and hist:
+        valid_entries = [entry for entry in hist if isinstance(entry, dict)]
+        if valid_entries:
+            has_map = True
+            st.markdown("### Latest Movement Map Sessions")
+            last = valid_entries[-1]
+            left = last.get("Left", {})
+            right = last.get("Right", {})
+            left_comp = left.get("Composite", "-")
+            right_comp = right.get("Composite", "-")
             symmetry = last.get("Symmetry", "-")
-        else:
-            left_comp = right_comp = symmetry = "-"
 
-        c1, c2, c3 = st.columns(3)
-        c1.metric(f"{move} L-Comp", left_comp)
-        c2.metric(f"{move} R-Comp", right_comp)
-        c3.metric(f"{move} Symmetry", symmetry)
+            c1, c2, c3 = st.columns(3)
+            c1.metric(f"{move} L-Comp", left_comp)
+            c2.metric(f"{move} R-Comp", right_comp)
+            c3.metric(f"{move} Symmetry", symmetry)
 
+if not has_map:
+    st.info("No Movement Map data recorded yet.")
 
-    else:
-        st.info("No Movement Map data recorded yet.")
 
     st.markdown("---")
     st.markdown("## Select an App to Continue")
